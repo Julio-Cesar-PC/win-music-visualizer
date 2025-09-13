@@ -17,8 +17,8 @@ let source: MediaElementAudioSourceNode | null = null
 let dataArray: Uint8Array
 
 const mode = ref(0)
-defineExpose({ canvas, mode }) // <-- adicione mode aqui
-const MODES = 8 // Número de estilos diferentes
+defineExpose({ canvas, mode })
+const MODES = 8
 let intervalId: number | undefined
 
 function draw() {
@@ -27,9 +27,8 @@ function draw() {
 
   analyser.getByteFrequencyData(dataArray)
 
-  // Calcula a cor média
   const avg = dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length
-  const hue = (avg + Date.now()/50) % 360    // Média influencia o hue
+  const hue = (avg + Date.now()/50) % 360
   const saturation = 65
   const lightness = 15
 
@@ -57,9 +56,7 @@ function drawBars() {
     const normalized = dataArray[i] / maxVal
     const barHeight = normalized * canvas.value!.height * 0.9
 
-    // Cor psicodélica animada
     ctx!.fillStyle = `hsl(${(i*10 + Date.now()/100) % 360}, 70%, ${30 + 20*normalized}%)`
-    // Efeito de distorção
     const distortion = Math.sin(Date.now() / 200 + i) * 5
     ctx!.fillRect(x, canvas.value!.height - barHeight + distortion, barWidth, barHeight)
 
@@ -96,8 +93,8 @@ function drawWave() {
   ctx.save()
   ctx.beginPath()
 
-  const smoothFactor = 0.02  // controla suavidade da onda
-  const amplitude = height * 0.25  // altura máxima da onda
+  const smoothFactor = 0.25
+  const amplitude = height * 0.25
 
   for (let i = 0; i < dataArray.length; i++) {
     const x = (i / dataArray.length) * width
