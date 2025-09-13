@@ -2,12 +2,7 @@
   <div class="app">
     <h1>🎶 Music Visualizer</h1>
 
-    <div
-      class="dropzone"
-      @dragover.prevent
-      @drop.prevent="onDrop"
-      @click="fileInput?.click()"
-    >
+    <div class="dropzone" @dragover.prevent @drop.prevent="onDrop" @click="fileInput?.click()">
       <p>Arraste sua música aqui ou clique para selecionar</p>
       <input
         type="file"
@@ -18,27 +13,18 @@
       />
     </div>
 
-    <Visualizer
-      v-if="store.audioUrl"
-      :audioRef="audioRef"
-      ref="visualizerRef"
-    />
-    <button v-if="store.audioUrl" @click="goFullscreen">
-      🖥️ Tela cheia
-    </button>
+    <Visualizer v-if="store.audioUrl" :audioRef="audioRef" ref="visualizerRef" />
+    <button v-if="store.audioUrl" @click="goFullscreen">🖥️ Tela cheia</button>
 
-    <AudioPlayer
-      ref="audioPlayerRef"
-      :src="store.audioUrl"
-    />
+    <AudioPlayer ref="audioPlayerRef" :src="store.audioUrl" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from "vue"
-import { useVisualizerStore } from "../stores/useVisualizerStore"
-import Visualizer from "../components/MusicVisualizer.vue"
-import AudioPlayer from "../components/AudioPlayer.vue"
+import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { useVisualizerStore } from '../stores/useVisualizerStore'
+import Visualizer from '../components/MusicVisualizer.vue'
+import AudioPlayer from '../components/AudioPlayer.vue'
 
 const store = useVisualizerStore()
 
@@ -46,31 +32,28 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const visualizerRef = ref()
 const audioPlayerRef = ref()
 
-// Atualiza a referência do audioRef para passar ao Visualizer
 const audioRef = ref<HTMLAudioElement | null>(null)
 watch(
   () => audioPlayerRef.value?.audioRef,
   (val) => {
     audioRef.value = val
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 onMounted(() => {
   const handleKey = (e: KeyboardEvent) => {
     if (!visualizerRef.value) return
-    // Avança efeito
-    if (e.key === "ArrowRight") {
+    if (e.key === 'ArrowRight') {
       visualizerRef.value.mode = (visualizerRef.value.mode + 1) % 8
     }
-    // Retrocede efeito
-    if (e.key === "ArrowLeft") {
+    if (e.key === 'ArrowLeft') {
       visualizerRef.value.mode = (visualizerRef.value.mode + 7) % 8
     }
   }
-  window.addEventListener("keydown", handleKey)
+  window.addEventListener('keydown', handleKey)
   onUnmounted(() => {
-    window.removeEventListener("keydown", handleKey)
+    window.removeEventListener('keydown', handleKey)
   })
 })
 
@@ -79,7 +62,7 @@ function goFullscreen() {
   if (canvas && canvas.requestFullscreen) {
     canvas.requestFullscreen()
   } else {
-    alert("Seu navegador não suporta fullscreen aqui.")
+    alert('Seu navegador não suporta fullscreen aqui.')
   }
 }
 
